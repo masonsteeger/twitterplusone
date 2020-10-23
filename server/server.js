@@ -18,6 +18,6 @@ app.use("/auth", require("./controllers/jwtAuth.js"))
 app.use("/dashboard", require("./controllers/dashboard.js"))
 
 //LISTENER
-app.listen(3000, () => {
-  console.log('Listening on Port 3000...');
+app.listen(5000, () => {
+  console.log('Listening on Port 5000...');
 })

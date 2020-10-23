@@ -12,11 +12,11 @@ auth.post("/register", validEmail, async (req, res) => {
     const {username, email, password} = req.body
     const userEmail = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if(userEmail.rows.length !== 0){
-      return res.status(401).send("Email already in use")
+      return res.status(401).json("Email is already in use");
     }
     const userName = await pool.query("SELECT * FROM users WHERE username = $1", [username])
     if(userName.rows.length !== 0){
-      return res.status(401).send("Username taken")
+      return res.status(401).json("Username taken");
     }
 
     const salt = await bcrypt.genSalt(10);
