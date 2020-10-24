@@ -32,7 +32,7 @@ auth.post("/register", validEmail, async (req, res) => {
 
   }catch (err){
     console.error(err.message);
-    res.status(500).send("Server Error")
+    res.status(500).json("Server Error")
   }
 })
 
@@ -62,7 +62,7 @@ auth.post("/login", async (req, res) => {
 
   }catch(err){
     console.error(err.message);
-    res.status(500).send("Server Error")
+    res.status(500).json("Server Error")
   }
 })
 
@@ -73,7 +73,7 @@ auth.get("/verify", authorization, async (req, res) => {
     res.json(true);
   }catch(err){
     console.error(err.message);
-    res.status(500).send("Server Error")
+    res.status(500).json("Server Error")
   }
 })
 
