@@ -46,9 +46,10 @@ function App() {
 
 
   return (
+  <div className= "container">
     <Fragment>
       <Router>
-        <div className= "container">
+
         <Switch>
           <Route exact path ="/" render={props => <Redirect to="/login"/>} />
           <Route exact path = "/login"
@@ -63,9 +64,9 @@ function App() {
           render={props =>
             isAuthenticated ? (<Dashboard {...props} setAuth={setAuth}/>) : (<Redirect to="/login" />)}/>
         </Switch>
-        </div>
       </Router>
     </Fragment>
+  </div>
   );
 }
 
