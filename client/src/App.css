@@ -1,1 +1,4 @@
-
+textarea{
+  resize:none;
+  font-size: 26px;
+}

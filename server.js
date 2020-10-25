@@ -24,6 +24,8 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 app.use("/auth", require("./controllers/jwtAuth.js"))
 //Dashboard
 app.use("/dashboard", require("./controllers/dashboard.js"))
+//Tweet
+app.use("/tweet", require("./controllers/tweet.js"))
 
 
 //LISTENER
