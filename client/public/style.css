@@ -1,5 +1,61 @@
-body{
+html body{
   background-color: lightblue;
-  height: 110vh
-  
+  height: 100%;
+
+}
+textarea{
+  resize:none;
+  font-size: 26px;
+}
+
+
+.tweets-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.tweet{
+  border: 2px solid darkblue;
+  border-radius: 20px;
+  background-color: white;
+  width: 600px;
+  padding:1em;
+  margin: 1.5em;
+
+}
+
+.tweet>h1{
+  font-size: 46px;
+}
+.tweet>p{
+  font-size: 26px;
+}
+
+
+.fav-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+.faves-num{
+  font-size: 26px;
+}
+.favorite{
+  background-image: url('icons/fav.png');
+  background-position: center;
+  background-size: contain;
+  height: 30px;
+  width: 30px;
+  margin-left: 1em;
+}
+
+.unfavorite{
+  background-image: url('icons/unfav.png');
+  background-position: center;
+  background-size: contain;
+  height: 30px;
+  width: 30px;
+  margin-left: 1em;
 }

@@ -36,7 +36,6 @@ auth.post("/register", validEmail, async (req, res) => {
   }
 })
 
-
 //LOGIN ROUTES
 
 auth.post("/login", async (req, res) => {
