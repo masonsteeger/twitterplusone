@@ -49,7 +49,6 @@ function App() {
   <div className= "container">
     <Fragment>
       <Router>
-
         <Switch>
           <Route exact path ="/" render={props => <Redirect to="/login"/>} />
           <Route exact path = "/login"

@@ -25,7 +25,7 @@ CREATE TABLE tweets(
   author uuid NOT NULL,
   tweet VARCHAR(281) NOT NULL,
   favorites_num INT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TRIGGER set_timestamp

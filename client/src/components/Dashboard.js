@@ -55,6 +55,12 @@ const Dashboard = ({setAuth}) => {
     setInputs({...inputs, tweet:''})
   }
 
+  const pressEnter = (event) => {
+    if(event.key === 'Enter'){
+      submitTweet(event);
+    }
+  }
+
   const submitTweet = async (event) => {
     event.preventDefault();
     try{
@@ -98,19 +104,7 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
-  const checkFav = (tweet_id) => {
-    console.log(faves);
-    if(faves === null || faves.length === 0){
-      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
-    }else{
-      for(let i = 0; i < faves.length; i++){
-        if(faves[i] == tweet_id){
-          return(<div className="fav-button favorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
-        }
-      }
-      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
-    }
-  }
+
 
 
   const favToggle = async(event) => {
@@ -150,6 +144,21 @@ const Dashboard = ({setAuth}) => {
       break;
     }
     getFaves();
+    getAllTweets();
+  }
+
+  const checkFav = (tweet_id) => {
+    console.log(faves);
+    if(faves === null || faves.length === 0){
+      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
+    }else{
+      for(let i = 0; i < faves.length; i++){
+        if(faves[i] === tweet_id){
+          return(<div className="fav-button favorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
+        }
+      }
+      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
+    }
     getAllTweets();
   }
 
@@ -200,7 +209,7 @@ const Dashboard = ({setAuth}) => {
           </header>
           <section className="modal-card-body">
           <form id="send-tweet" onSubmit={submitTweet}>
-            <textarea id="tweet-box" name="tweet" value={tweet} cols="48" rows="6" form="send-tweet" maxLength="281" onChange={event => onChange(event)}/>
+            <textarea id="tweet-box" name="tweet" value={tweet} cols="48" rows="6" form="send-tweet" maxLength="281" onKeyPress={event => pressEnter(event)} onChange={event => onChange(event)}/>
             <input type="submit" value="Submit" className="button is-info mr-4" />
           </form>
           </section>
