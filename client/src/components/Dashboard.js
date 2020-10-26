@@ -4,7 +4,6 @@ import '../App.css'
 import {toast} from "react-toastify"
 
 const Dashboard = ({setAuth}) => {
-
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [faves, setFaves] = useState([])
@@ -183,9 +182,12 @@ const Dashboard = ({setAuth}) => {
 
   useEffect(() => {
     getName();
+  }, [])
+
+  useEffect(() => {
     getFaves();
     getAllTweets();
-  }, [])
+  },[id] )
 
   return(
     <Fragment>
