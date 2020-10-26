@@ -187,7 +187,7 @@ const Dashboard = ({setAuth}) => {
   useEffect(() => {
     getFaves();
     getAllTweets();
-  },[id] )
+  },[id])
 
   return(
     <Fragment>

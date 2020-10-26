@@ -7,6 +7,9 @@ tweet.post("/create", async (req,res) => {
   try{
     const {id, tweet} = req.body
     const newTweet = await pool.query("INSERT INTO tweets(author, tweet, favorites_num) VALUES ($1, $2, $3) RETURNING *", [id, tweet, 0])
+    const tweet_id = newTweet.rows[0].tweet_id
+    await pool.query(`UPDATE users SET tweets = array_append(tweets, '${tweet_id}') WHERE user_id = '${id}'`)
+
     res.json(newTweet.rows)
   }catch(err){
     console.error(err.message);
@@ -49,6 +52,8 @@ tweet.put("/favorite", async (req,res) => {
     res.status(500).json("Server Error")
   }
 })
+
+//DELETE A TWEET
 
 
 module.exports = tweet
