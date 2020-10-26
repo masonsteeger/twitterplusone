@@ -21,9 +21,9 @@ const Dashboard = ({setAuth}) => {
         headers: {token: localStorage.token}
       })
       const parseRes = await response.json()
-      console.log();
       setName(parseRes.username)
       setId(parseRes.user_id)
+
     }catch(err){
       console.error(err.message)
     }
@@ -173,7 +173,6 @@ const Dashboard = ({setAuth}) => {
   }
 
   useEffect(() => {
-    getName();
     getFaves();
     getAllTweets();
   }, [])
