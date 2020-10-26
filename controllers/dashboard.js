@@ -4,7 +4,7 @@ const authorization = require("../middleware/authorization");
 
 dash.get("/", authorization, async (req, res) => {
   try{
-    const user = await pool.query("SELECT user_id, username, email, favorites FROM users WHERE  user_id = $1", [req.user]);
+    const user = await pool.query("SELECT user_id, username FROM users WHERE  user_id = $1", [req.user]);
     res.json(user.rows[0]);
     console.log(user.rows[0]);
   }catch(err){

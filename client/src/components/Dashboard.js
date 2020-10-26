@@ -21,8 +21,9 @@ const Dashboard = ({setAuth}) => {
         headers: {token: localStorage.token}
       })
       const parseRes = await response.json()
-      setName(parseRes.username);
-      setId(parseRes.user_id);
+      console.log();
+      setName(parseRes.username)
+      setId(parseRes.user_id)
     }catch(err){
       console.error(err.message)
     }
@@ -103,12 +104,11 @@ const Dashboard = ({setAuth}) => {
       return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
     }else{
       for(let i = 0; i < faves.length; i++){
-        if(faves[i] !== tweet_id){
-          return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
-        }else{
+        if(faves[i] == tweet_id){
           return(<div className="fav-button favorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
         }
       }
+      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
     }
   }
 
@@ -119,7 +119,7 @@ const Dashboard = ({setAuth}) => {
     const body = {tweet_id, user_id}
     console.log(body);
     switch (event.target.classList[1]) {
-      case 'unfavorite':
+      case ('unfavorite'):
         event.target.classList.remove('unfavorite');
         event.target.classList.add('favorite');
         try{
@@ -133,7 +133,7 @@ const Dashboard = ({setAuth}) => {
 
         }
       break;
-      case 'favorite':
+      case ('favorite'):
         event.target.classList.remove('favorite');
         event.target.classList.add('unfavorite');
         try{
