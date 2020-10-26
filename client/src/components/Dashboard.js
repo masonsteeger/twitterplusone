@@ -27,9 +27,20 @@ const Dashboard = ({setAuth}) => {
     }catch(err){
       console.error(err.message)
     }
-  }
+    //getting favorites
+    const user_id = id
+    try{
+      // THIS IS THE ONLY THING WRONG WITH THE FAV FUNCTION WHEN I HARD-CODE THE USER ID IN IT WORKS PERFECTLY
+      const response = await fetch(`/tweet/faves/${user_id}`,{
+        method: "GET",
+      })
+      const parseRes = await response.json();
+      console.log(parseRes);
+      setFaves(parseRes[0].favorites);
 
-  const getAllTweets = async() => {
+    }catch (err){
+      console.error(err.message);
+    }
     try{
     const response = await fetch("/tweet/read")
     const parseRes = await response.json()
@@ -37,6 +48,10 @@ const Dashboard = ({setAuth}) => {
     }catch(err){
       console.log(err.message);
     }
+  }
+
+  const getAllTweets = async() => {
+
   }
 
 
@@ -82,20 +97,9 @@ const Dashboard = ({setAuth}) => {
   }
 
   const getFaves = async () => {
+    const result = await getName();
     console.log(id);
-    const user_id = id
-    try{
-      // THIS IS THE ONLY THING WRONG WITH THE FAV FUNCTION WHEN I HARD-CODE THE USER ID IN IT WORKS PERFECTLY
-      const response = await fetch(`/tweet/faves/${user_id}`,{
-        method: "GET",
-      })
-      const parseRes = await response.json();
-      console.log(parseRes);
-      setFaves(parseRes[0].favorites);
 
-    }catch (err){
-      console.error(err.message);
-    }
   }
 
   const checkFav = (tweet_id) => {
@@ -173,8 +177,7 @@ const Dashboard = ({setAuth}) => {
   }
 
   useEffect(() => {
-    getFaves();
-    getAllTweets();
+    getName();
   }, [])
 
   return(
