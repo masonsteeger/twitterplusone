@@ -87,7 +87,6 @@ const Dashboard = ({setAuth}) => {
   }
 
   const getFaves = async () => {
-    console.log(id);
     const user_id = id
     try{
       // THIS IS THE ONLY THING WRONG WITH THE FAV FUNCTION WHEN I HARD-CODE THE USER ID IN IT WORKS PERFECTLY
@@ -123,7 +122,7 @@ const Dashboard = ({setAuth}) => {
           })
 
         }catch(err){
-
+          console.error(err.message);
         }
       break;
       case ('favorite'):
@@ -138,7 +137,7 @@ const Dashboard = ({setAuth}) => {
           })
 
         }catch(err){
-
+          console.error(err.message);
         }
       break;
     }
@@ -147,7 +146,6 @@ const Dashboard = ({setAuth}) => {
   }
 
   const checkFav = (tweet_id) => {
-    console.log(faves);
     if(faves === null || faves.length === 0){
       return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
     }else{
@@ -159,6 +157,35 @@ const Dashboard = ({setAuth}) => {
       return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
     }
     getAllTweets();
+  }
+
+  const deleteTweet = async (event) => {
+    const tweet_id = event.target.id
+    console.log(tweet_id);
+    try{
+      const response = await fetch(`/tweet/delete/${tweet_id}`, {
+        method: "DELETE"
+      })
+      toast.error("Tweet Deleted", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        })
+    }catch(err){
+      console.error(err.message);
+
+    }
+    getAllTweets();
+  }
+
+  const checkDelete = (user_id, tweet_id) => {
+    if(user_id === id){
+      return(<button id={tweet_id} className="button is-danger" onClick={event => deleteTweet(event)}>DELETE</button>)
+    }
   }
 
   const logout = (event) => {
@@ -229,9 +256,14 @@ const Dashboard = ({setAuth}) => {
         <div className="tweet">
           <h1>@{tweet.username}</h1>
           <p>{tweet.tweet}</p>
-          <div className="fav-container">
-            <div className="faves-num">{tweet.favorites_num}</div>
-            {checkFav(tweet.tweet_id)}
+          <div className="tweet-footer">
+            <div className="fav-container">
+              <div className="faves-num">{tweet.favorites_num}</div>
+              {checkFav(tweet.tweet_id)}
+            </div>
+            <div>
+              {checkDelete(tweet.author, tweet.tweet_id)}
+            </div>
           </div>
         </div>
       ))}

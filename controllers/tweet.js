@@ -20,7 +20,7 @@ tweet.post("/create", async (req,res) => {
 //READ ALL TWEETS
 tweet.get("/read", async (req, res) => {
   let allTweets = await
-  pool.query(`SELECT users.username, tweets.tweet, tweets.created_at, tweets.favorites_num, tweets.tweet_id FROM users, tweets WHERE "user_id" = "author" ORDER BY created_at DESC;`)
+  pool.query(`SELECT users.username, tweets.tweet, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet_id FROM users, tweets WHERE "user_id" = "author" ORDER BY created_at DESC;`)
   res.json(allTweets.rows)
 })
 
@@ -54,6 +54,18 @@ tweet.put("/favorite", async (req,res) => {
 })
 
 //DELETE A TWEET
+tweet.delete("/delete/:id", async (req, res) => {
+  try{
+    const tweet_id = req.params.id
+    await pool.query(`UPDATE users SET favorites = array_remove(favorites, '${tweet_id}');`)
+    await pool.query(`UPDATE users SET tweets = array_remove(tweets, '${tweet_id}');`)
+    await pool.query(`DELETE FROM tweets WHERE tweet_id = '${tweet_id}';`)
+    res.json("Tweet Deleted")
+  }catch(err){
+    console.error(err.message)
+    res.status(500).json("Server Error")
+  }
+})
 
 
 module.exports = tweet
