@@ -53,13 +53,13 @@ function App() {
           <Route exact path ="/" render={props => <Redirect to="/login"/>} />
           <Route exact path = "/login"
           render={props =>
-            !isAuthenticated ? (<Login {...props} setAuth={setAuth}/>) : (<Redirect to="/dashboard" />)}/>
+            !isAuthenticated ? (<Login {...props} setAuth={setAuth}/>) : (<Redirect to="/home" />)}/>
 
           <Route exact path = "/register"
           render={props =>
             !isAuthenticated ? (<Register {...props} setAuth={setAuth}/>) : (<Redirect to="/login" />)}/>
 
-          <Route exact path = "/dashboard"
+          <Route exact path = "/home"
           render={props =>
             isAuthenticated ? (<Dashboard {...props} setAuth={setAuth}/>) : (<Redirect to="/login" />)}/>
         </Switch>

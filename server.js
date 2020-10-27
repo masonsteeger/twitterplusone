@@ -16,8 +16,6 @@ app.use(cors())
 app.use(express.static(path.join(__dirname, 'client/build')))
 
 
-//ROUTES
-
 
 //CONTROLLERS
 //Register/Login
@@ -27,6 +25,15 @@ app.use("/dashboard", require("./controllers/dashboard.js"))
 //Tweet
 app.use("/tweet", require("./controllers/tweet.js"))
 
+
+//CATCH ROUTES
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+})
 
 //LISTENER
 app.listen(PORT, () => {

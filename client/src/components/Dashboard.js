@@ -194,11 +194,12 @@ const Dashboard = ({setAuth}) => {
       <div>
         <nav className="navbar pt-2 pb-2 is-fixed-top is-link">
           <div className="navbar-start">
-            <div className="ml-4 navbar-item">Hello {name}!</div>
+            <a href="/"><div id="logo"></div></a>
           </div>
           <div className="navbar-end">
+            <div className="ml-4 navbar-item">Hello {name}!</div>
             <div className="buttons">
-              <a className="mr-2 ml-5 button is-primary" onClick={openModal}>Add A Tweet+</a>
+              <a className="ml-5 button is-primary" onClick={openModal}>Add A Tweet+</a>
               <a className="mr-2 button is-danger " onClick={event => logout(event)}>Log Out</a>
             </div>
           </div>
