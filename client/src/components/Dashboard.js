@@ -47,6 +47,20 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
+  // const getUserTweets = async (event) => {
+  //   const user_id = event.target.id
+  //   try{
+  //     const response = await fetch(`tweet/user/${user_id}`, {method:"GET"})
+  //     const parseRes = await response.json()
+  //     setAllTweets(parseRes);
+  //   }catch(err){
+  //     console.error(err.message);
+  //   }
+  //   getAllTweets();
+  //   getFaves();
+  // }
+
+
   const getUsers = async() => {
     try{
       const response = await fetch("/tweet/users")
@@ -186,14 +200,12 @@ const Dashboard = ({setAuth}) => {
     const currentUser = id;
     const username = button.value
     const user_id = button.id
-    console.log(currentUser);
-    console.log(user_id);
     switch(button.classList[1]){
       case("is-info") :
         button.classList.remove('is-info')
         button.classList.add('is-danger')
         button.innerHTML="Unfollow"
-        toast.success(`You are now following ${username}!`, {
+        toast.success(`You are now following @${username}!`, {
           position: "top-center",
           autoClose: 2000,
           hideProgressBar: false,
@@ -207,7 +219,7 @@ const Dashboard = ({setAuth}) => {
       button.classList.add('is-info')
       button.classList.remove('is-danger')
       button.innerHTML="Follow"
-      toast.error(`You have unfollowed ${username}`, {
+      toast.error(`You have unfollowed @${username}`, {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -236,6 +248,7 @@ const Dashboard = ({setAuth}) => {
 
 //CHECK FOLLOWERS
   const checkFollow = (user_id, username) => {
+
      for(let i=0; i<following.length; i++){
        if(following[i] === user_id){
          return(<button id={user_id} value={username} onClick={event => followToggle(event)} className="button is-danger">Unfollow</button>)
@@ -307,8 +320,6 @@ const Dashboard = ({setAuth}) => {
 
 
 
-
-
   return(
     <Fragment>
       <div>
@@ -322,7 +333,7 @@ const Dashboard = ({setAuth}) => {
             </div>
           </div>
           <div className="navbar-end">
-            <div className="ml-4 navbar-item">Hello {name}!</div>
+            <div className="ml-4 navbar-item">Hello @{name}!</div>
             <div className="buttons">
               <a className="ml-5 button is-primary" onClick={openTweetModal}>Add A Tweet+</a>
               <a className="mr-2 button is-danger " onClick={event => logout(event)}>Log Out</a>
@@ -355,8 +366,8 @@ const Dashboard = ({setAuth}) => {
             <section className="modal-card-body">
               {users.map(user =>
                 user.user_id === id ? null : (
-                <div className="user">
-                  <a className="username" href="#">{user.username}</a>
+                <div className="user" id={user.user_id}>
+                  <p className="username">@{user.username}</p>
                   {checkFollow(user.user_id, user.username)}
                 </div>
               ))}
@@ -369,6 +380,7 @@ const Dashboard = ({setAuth}) => {
       <br/>
       <br/>
       <br/>
+      <h1 id="title" className="is-size-1">Timeline</h1>
       <div className="tweets-container mt-4">
       {allTweets.map(tweet => (
         <div className="tweet">

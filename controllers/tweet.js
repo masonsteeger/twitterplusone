@@ -8,8 +8,7 @@ tweet.post("/create", async (req,res) => {
     const {id, tweet} = req.body
     const newTweet = await pool.query("INSERT INTO tweets(author, tweet, favorites_num) VALUES ($1, $2, $3) RETURNING *", [id, tweet, 0])
     const tweet_id = newTweet.rows[0].tweet_id
-    await pool.query(`UPDATE users SET tweets = array_append(tweets, '${tweet_id}') WHERE user_id = '${id}'`)
-
+    await pool.query(`UPDATE users SET tweets = array_append(tweets, '${tweet_id}') WHERE user_id = '${id}'`);
     res.json(newTweet.rows)
   }catch(err){
     console.error(err.message);
@@ -17,14 +16,28 @@ tweet.post("/create", async (req,res) => {
   }
 })
 
-//READ ALL TWEETS
+//READ ALL FOLLOWING TWEETS
 tweet.get("/read/:id", async (req, res) => {
-  const {id} = req.params
-  console.log(id);
-  let allTweets = await
-  pool.query(`SELECT tweeter.username, current.following, tweets.tweet_id, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet FROM users AS current INNER JOIN tweets ON tweets.author = ANY (current.following) INNER JOIN users AS tweeter ON tweets.author = tweeter.user_id WHERE current.user_id = '${id}' ORDER BY created_at DESC;`)
-  res.json(allTweets.rows)
+  try{
+    const {id} = req.params
+    let allTweets = await
+    pool.query(`SELECT tweeter.username, current.following, tweets.tweet_id, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet FROM users AS current INNER JOIN tweets ON tweets.author = ANY (current.following) INNER JOIN users AS tweeter ON tweets.author = tweeter.user_id WHERE current.user_id = '${id}' ORDER BY created_at DESC;`)
+    res.json(allTweets.rows)
+  }catch(err){
+    console.error(err.message);
+  }
 })
+
+// //READ ALL OF ONE USER'S TWEETS
+// tweet.get("/user/:id", async (req, res) => {
+//   try{
+//     const {id} = req.params
+//     let userTweets = await pool.query(`SELECT user_id, username, tweets, favorites_num, created_at, tweet_id  FROM users JOIN tweets ON author=user_id WHERE user_id = '${id}';`)
+//     res.json(userTweets.rows);
+//   }catch(err){
+//     console.error(err.message);
+//   }
+// })
 
 //READ ALL USERS
 tweet.get("/users", async (req, res) => {
