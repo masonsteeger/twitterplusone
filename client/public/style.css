@@ -12,6 +12,31 @@ textarea{
   font-size: 26px;
 }
 
+#links{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+.user{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 4px;
+  border-width: 3px;
+  border-color: lightblue;
+  border-style: inset;
+  padding: 1em;
+  margin-bottom: 3px;
+}
+.user:hover{
+  background-color: rgba(174,216,230,0.5);
+  
+}
+.username{
+  font-size: 30px;
+}
+
 
 .tweets-container{
   display: flex;
@@ -72,7 +97,7 @@ textarea{
   background-image: url('icons/logo.png');
   background-position: center;
   background-size: contain;
-  height: 60px;
-  width: 60px;
+  height: 40px;
+  width: 40px;
   margin-left: 1em;
 }

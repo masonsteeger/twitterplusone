@@ -22,11 +22,11 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 app.use("/auth", require("./controllers/jwtAuth.js"))
 //Dashboard
 app.use("/dashboard", require("./controllers/dashboard.js"))
-//Tweet
+//Tweets
 app.use("/tweet", require("./controllers/tweet.js"))
 
 
-//CATCH ROUTES
+//CATCH FRONTEND ROUTES
 app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'client/build/index.html'), function(err) {
     if (err) {

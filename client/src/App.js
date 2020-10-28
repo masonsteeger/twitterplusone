@@ -62,6 +62,7 @@ function App() {
           <Route exact path = "/home"
           render={props =>
             isAuthenticated ? (<Dashboard {...props} setAuth={setAuth}/>) : (<Redirect to="/login" />)}/>
+
         </Switch>
       </Router>
     </Fragment>

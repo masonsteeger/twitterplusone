@@ -24,12 +24,39 @@ tweet.get("/read", async (req, res) => {
   res.json(allTweets.rows)
 })
 
+//READ ALL USERS
+tweet.get("/users", async (req, res) => {
+  let allUsers = await pool.query("SELECT user_id, username FROM users;")
+  res.json(allUsers.rows)
+})
+
+
 //READ USER FAVES
 tweet.get("/faves/:user_id", async (req,res) => {
   const {user_id} = req.params
   let userFaves = await pool.query(`SELECT favorites FROM users WHERE user_id = '${user_id}'`)
   res.json(userFaves.rows)
 })
+
+//FOLLOW/UNFOLLOW USER
+tweet.put("/follow", async (req, res) => {
+  try{
+    const {currentUser, user_id} = req.body
+    let check = await pool.query(`SELECT following FROM users WHERE user_id = '${currentUser}' AND '${user_id}' = ANY(following)`)
+    if(check.rows.length>0){
+      await pool.query(`UPDATE users SET following = array_remove(following, '${user_id}') WHERE user_id = '${currentUser}';`);
+      res.json('Un-followed')
+    }else{
+      await pool.query(`UPDATE users SET following = array_append(favorites, '${user_id}') WHERE user_id = '${currentUser}';`);
+      res.json('Followed')
+    }
+
+  }catch(err){
+    console.error(err.message);
+    res.status(500).json("Server Error")
+  }
+})
+
 
 //FAVORITE/UNFAVORITE A TWEET
 tweet.put("/favorite", async (req,res) => {
@@ -45,11 +72,9 @@ tweet.put("/favorite", async (req,res) => {
       await pool.query(`UPDATE tweets SET favorites_num = favorites_num + 1 WHERE tweet_id = '${tweet_id}'`)
       res.json('Favorited')
     }
-
-
   }catch(err){
-    console.error(err.message);
-    res.status(500).json("Server Error")
+  console.error(err.message);
+  res.status(500).json("Server Error")
   }
 })
 
