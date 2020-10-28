@@ -25,6 +25,7 @@ auth.post("/register", validEmail, async (req, res) => {
 
     const newUser = await pool.query("INSERT INTO users(username, email, password) VALUES ($1, $2, $3) RETURNING *", [username, email, bcryptPassword])
 
+    await pool.query(`UPDATE users SET following = array_append(following, '${newUser.rows[0].user_id}') WHERE user_id = '${newUser.rows[0].user_id}';`)
 
     const token = jwtGenerator(newUser.rows[0].user_id)
 

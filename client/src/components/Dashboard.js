@@ -4,8 +4,8 @@ import 'bulma/css/bulma.css'
 import '../App.css'
 import {toast} from "react-toastify"
 
-
 const Dashboard = ({setAuth}) => {
+/////////////////////////////////////CONSTANTS////////////////////////
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [faves, setFaves] = useState([])
@@ -16,7 +16,12 @@ const Dashboard = ({setAuth}) => {
   const [users, setUsers] = useState([])
   const [following, setFollowing] = useState([])
   const {tweet} = inputs;
+  const onChange = (event) => {
+    setInputs({...inputs, [event.target.name]:event.target.value})
+  }
 
+
+//////////////////////////////USEEFFECT FUNCTIONS////////////////////////
   async function getName() {
     try{
       const response = await fetch("/dashboard",{
@@ -24,7 +29,6 @@ const Dashboard = ({setAuth}) => {
         headers: {token: localStorage.token}
       })
       const parseRes = await response.json()
-      console.log(parseRes);
       setName(parseRes.username)
       setId(parseRes.user_id)
       setFollowing(parseRes.following)
@@ -35,7 +39,7 @@ const Dashboard = ({setAuth}) => {
 
   const getAllTweets = async() => {
     try{
-    const response = await fetch("/tweet/read")
+    const response = await fetch(`/tweet/read/${id}`)
     const parseRes = await response.json()
     setAllTweets(parseRes);
     }catch(err){
@@ -53,9 +57,22 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
-  const onChange = (event) => {
-    setInputs({...inputs, [event.target.name]:event.target.value})
+  const getFaves = async () => {
+    const user_id = id
+    try{
+      const response = await fetch(`/tweet/faves/${user_id}`,{
+        method: "GET",
+      })
+      const parseRes = await response.json();
+      setFaves(parseRes[0].favorites);
+
+    }catch (err){
+      console.error(err.message);
+    }
   }
+
+
+///////////////////////////////MODAL CONTROLS////////////////////////
 
   const openTweetModal = () => {
     let tweetModal = document.getElementById('tweet');
@@ -84,6 +101,9 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
+
+/////////////////////////////SUBMITTING TWEET////////////////////////
+
   const submitTweet = async (event) => {
     event.preventDefault();
     try{
@@ -110,27 +130,14 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
-  const getFaves = async () => {
-    const user_id = id
-    try{
-      const response = await fetch(`/tweet/faves/${user_id}`,{
-        method: "GET",
-      })
-      const parseRes = await response.json();
-      console.log(parseRes);
-      setFaves(parseRes[0].favorites);
 
-    }catch (err){
-      console.error(err.message);
-    }
-  }
+///////////////////////////FAVORITES CONTROLS////////////////////////
 
 //TOGGLEING FAVORITES BUTTON
   const favToggle = async(event) => {
     const tweet_id = event.target.id
     const user_id = id
     const body = {tweet_id, user_id}
-    console.log(body);
     switch (event.target.classList[1]) {
       case ('unfavorite'):
         event.target.classList.remove('unfavorite');
@@ -171,7 +178,8 @@ const Dashboard = ({setAuth}) => {
     getAllTweets();
   }
 
-//FOLLOWING BUTTON TOGGLE
+
+//////////////////////////////FOLLOWING CONTROLS////////////////////////
   const followToggle = async(event) => {
     const button = event.target
     const currentUser = id;
@@ -191,6 +199,7 @@ const Dashboard = ({setAuth}) => {
     }
     try{
       const body = {currentUser, user_id}
+      console.log(body);
       const response = await fetch("/tweet/follow", {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
@@ -200,30 +209,33 @@ const Dashboard = ({setAuth}) => {
     }catch(err){
       console.error(err.message);
     }
-    console.log(following);
+    getName();
     getUsers();
     getAllTweets();
   }
 
+
 //CHECK FOLLOWERS
   const checkFollow = (user_id) => {
+    console.log(following);
+    console.log(user_id);
     if(following === null || following.length === 0){
       return(<button id={user_id} onClick={event => followToggle(event)} className="button is-info" value="Follow">Follow</button>)
     }else{
        for(let i=0; i<following.length; i++){
          if(following[i] === user_id){
            return(<button id={user_id} onClick={event => followToggle(event)} className="button is-danger">Unfollow</button>)
-         }else{
-           return(<button id={user_id} onClick={event => followToggle(event)} className="button is-info">Follow</button>)
          }
        }
+       return(<button id={user_id} onClick={event => followToggle(event)} className="button is-info">Follow</button>)
     }
   }
 
 
+/////////////////////////////DELETEING FUNCTIONS////////////////////////
+
   const deleteTweet = async (event) => {
     const tweet_id = event.target.id
-    console.log(tweet_id);
     try{
       const response = await fetch(`/tweet/delete/${tweet_id}`, {
         method: "DELETE"
@@ -250,6 +262,7 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
+//////////////////////////////////////LOGOUT////////////////////////
   const logout = (event) => {
     event.preventDefault()
     localStorage.removeItem("token")
@@ -277,7 +290,11 @@ const Dashboard = ({setAuth}) => {
     getFaves();
     getAllTweets();
     getUsers();
-  },[id])
+  },[id, following])
+
+
+
+
 
   return(
     <Fragment>
@@ -285,7 +302,7 @@ const Dashboard = ({setAuth}) => {
         <nav className="navbar pt-2 pb-2 is-fixed-top is-link">
           <div className="navbar-start">
             <div className="navbar-brand">
-              <a className="navbar-item" href="/"><img src="./icons/logo.png" width="32" height="32" />Home</a>
+              <a className="navbar-item" href="/"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
             </div>
             <div className="navbar-menu">
               <a className="navbar-item" onClick={openUserModal}>User's List</a>

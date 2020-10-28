@@ -18,9 +18,11 @@ tweet.post("/create", async (req,res) => {
 })
 
 //READ ALL TWEETS
-tweet.get("/read", async (req, res) => {
+tweet.get("/read/:id", async (req, res) => {
+  const {id} = req.params
+  console.log(id);
   let allTweets = await
-  pool.query(`SELECT users.username, tweets.tweet, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet_id FROM users, tweets WHERE "user_id" = "author" ORDER BY created_at DESC;`)
+  pool.query(`SELECT tweeter.username, current.following, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet FROM users AS current INNER JOIN tweets ON tweets.author = ANY (current.following) INNER JOIN users AS tweeter ON tweets.author = tweeter.user_id WHERE current.user_id = '${id}' ORDER BY created_at DESC;`)
   res.json(allTweets.rows)
 })
 
@@ -42,15 +44,14 @@ tweet.get("/faves/:user_id", async (req,res) => {
 tweet.put("/follow", async (req, res) => {
   try{
     const {currentUser, user_id} = req.body
-    let check = await pool.query(`SELECT following FROM users WHERE user_id = '${currentUser}' AND '${user_id}' = ANY(following)`)
-    if(check.rows.length>0){
+    let check = await pool.query(`SELECT following FROM users WHERE user_id = '${currentUser}' AND '${user_id}' = ANY(following);`)
+    if(check.rows.length === 0){
+      await pool.query(`UPDATE users SET following = array_append(following, '${user_id}') WHERE user_id = '${currentUser}';`)
+      res.json('Followed')
+    }else{
       await pool.query(`UPDATE users SET following = array_remove(following, '${user_id}') WHERE user_id = '${currentUser}';`);
       res.json('Un-followed')
-    }else{
-      await pool.query(`UPDATE users SET following = array_append(favorites, '${user_id}') WHERE user_id = '${currentUser}';`);
-      res.json('Followed')
     }
-
   }catch(err){
     console.error(err.message);
     res.status(500).json("Server Error")
