@@ -179,10 +179,12 @@ const Dashboard = ({setAuth}) => {
   }
 
 
+
 //////////////////////////////FOLLOWING CONTROLS////////////////////////
   const followToggle = async(event) => {
     const button = event.target
     const currentUser = id;
+    const username = button.value
     const user_id = button.id
     console.log(currentUser);
     console.log(user_id);
@@ -191,15 +193,32 @@ const Dashboard = ({setAuth}) => {
         button.classList.remove('is-info')
         button.classList.add('is-danger')
         button.innerHTML="Unfollow"
+        toast.success(`You are now following ${username}!`, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          })
       break;
       case("is-danger"):
       button.classList.add('is-info')
       button.classList.remove('is-danger')
       button.innerHTML="Follow"
+      toast.error(`You have unfollowed ${username}`, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        })
     }
     try{
       const body = {currentUser, user_id}
-      console.log(body);
       const response = await fetch("/tweet/follow", {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
@@ -216,19 +235,13 @@ const Dashboard = ({setAuth}) => {
 
 
 //CHECK FOLLOWERS
-  const checkFollow = (user_id) => {
-    console.log(following);
-    console.log(user_id);
-    if(following === null || following.length === 0){
-      return(<button id={user_id} onClick={event => followToggle(event)} className="button is-info" value="Follow">Follow</button>)
-    }else{
-       for(let i=0; i<following.length; i++){
-         if(following[i] === user_id){
-           return(<button id={user_id} onClick={event => followToggle(event)} className="button is-danger">Unfollow</button>)
-         }
-       }
-       return(<button id={user_id} onClick={event => followToggle(event)} className="button is-info">Follow</button>)
+  const checkFollow = (user_id, username) => {
+     for(let i=0; i<following.length; i++){
+       if(following[i] === user_id){
+         return(<button id={user_id} value={username} onClick={event => followToggle(event)} className="button is-danger">Unfollow</button>)
+      }
     }
+     return(<button id={user_id} value={username} onClick={event => followToggle(event)} className="button is-info">Follow</button>)
   }
 
 
@@ -305,7 +318,7 @@ const Dashboard = ({setAuth}) => {
               <a className="navbar-item" href="/"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
             </div>
             <div className="navbar-menu">
-              <a className="navbar-item" onClick={openUserModal}>User's List</a>
+              <a className="navbar-item" onClick={openUserModal}>User List</a>
             </div>
           </div>
           <div className="navbar-end">
@@ -344,7 +357,7 @@ const Dashboard = ({setAuth}) => {
                 user.user_id === id ? null : (
                 <div className="user">
                   <a className="username" href="#">{user.username}</a>
-                  {checkFollow(user.user_id)}
+                  {checkFollow(user.user_id, user.username)}
                 </div>
               ))}
             </section>

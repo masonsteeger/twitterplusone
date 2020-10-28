@@ -22,7 +22,7 @@ tweet.get("/read/:id", async (req, res) => {
   const {id} = req.params
   console.log(id);
   let allTweets = await
-  pool.query(`SELECT tweeter.username, current.following, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet FROM users AS current INNER JOIN tweets ON tweets.author = ANY (current.following) INNER JOIN users AS tweeter ON tweets.author = tweeter.user_id WHERE current.user_id = '${id}' ORDER BY created_at DESC;`)
+  pool.query(`SELECT tweeter.username, current.following, tweets.tweet_id, tweets.author, tweets.created_at, tweets.favorites_num, tweets.tweet FROM users AS current INNER JOIN tweets ON tweets.author = ANY (current.following) INNER JOIN users AS tweeter ON tweets.author = tweeter.user_id WHERE current.user_id = '${id}' ORDER BY created_at DESC;`)
   res.json(allTweets.rows)
 })
 
