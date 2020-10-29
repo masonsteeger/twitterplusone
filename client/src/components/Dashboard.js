@@ -19,7 +19,7 @@ const Dashboard = ({setAuth}) => {
   const onChange = (event) => {
     setInputs({...inputs, [event.target.name]:event.target.value})
   }
-
+  const [profile, setProfile] = useState("")
 
 //////////////////////////////USEEFFECT FUNCTIONS////////////////////////
   async function getName() {
@@ -38,6 +38,8 @@ const Dashboard = ({setAuth}) => {
   }
 
   const getAllTweets = async() => {
+    setProfile("all")
+    console.log(profile);
     try{
     const response = await fetch(`/tweet/read/${id}`)
     const parseRes = await response.json()
@@ -47,18 +49,24 @@ const Dashboard = ({setAuth}) => {
     }
   }
 
-  // const getUserTweets = async (event) => {
-  //   const user_id = event.target.id
-  //   try{
-  //     const response = await fetch(`tweet/user/${user_id}`, {method:"GET"})
-  //     const parseRes = await response.json()
-  //     setAllTweets(parseRes);
-  //   }catch(err){
-  //     console.error(err.message);
-  //   }
-  //   getAllTweets();
-  //   getFaves();
-  // }
+  const getUserTweets = async (event, username, user_id) => {
+    setProfile(user_id);
+    console.log(profile);
+    console.log(user_id);
+    try{
+      const response = await fetch(`tweet/user/${user_id}`)
+      const parseRes = await response.json()
+      setAllTweets(parseRes);
+    }catch(err){
+      console.error(err.message);
+    }
+    const title = document.getElementById('title')
+    if(title.innerHTML !== `@${username}'s Profile'`){
+      title.innerHTML = "@"+ username + "'s Profile"
+    }
+    closeUserModal();
+    getFaves();
+  }
 
 
   const getUsers = async() => {
@@ -69,6 +77,7 @@ const Dashboard = ({setAuth}) => {
     }catch(err){
         console.log(err.message);
     }
+
   }
 
   const getFaves = async () => {
@@ -148,7 +157,7 @@ const Dashboard = ({setAuth}) => {
 ///////////////////////////FAVORITES CONTROLS////////////////////////
 
 //TOGGLEING FAVORITES BUTTON
-  const favToggle = async(event) => {
+  const favToggle = async(event, username) => {
     const tweet_id = event.target.id
     const user_id = id
     const body = {tweet_id, user_id}
@@ -173,23 +182,26 @@ const Dashboard = ({setAuth}) => {
       console.error(err.message);
     }
     getFaves();
-    getAllTweets();
+    if(profile === "all"){
+      getAllTweets();
+    }else{
+      getUserTweets(event, username, profile)
+    }
   }
 
 
 //CHECKING FAVORITES
-  const checkFav = (tweet_id) => {
+  const checkFav = (tweet_id, username) => {
     if(faves === null || faves.length === 0){
-      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
+      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event, username)}></div>)
     }else{
       for(let i = 0; i < faves.length; i++){
         if(faves[i] === tweet_id){
-          return(<div className="fav-button favorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
+          return(<div className="fav-button favorite" id={tweet_id} onClick={event => favToggle(event, username)}></div>)
         }
       }
-      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event)}></div>)
+      return(<div className="fav-button unfavorite" id={tweet_id} onClick={event => favToggle(event, username)}></div>)
     }
-    getAllTweets();
   }
 
 
@@ -242,7 +254,11 @@ const Dashboard = ({setAuth}) => {
     }
     getName();
     getUsers();
-    getAllTweets();
+    if(profile === "all"){
+      getAllTweets();
+    }else{
+      getUserTweets(event, username, profile)
+    }
   }
 
 
@@ -260,7 +276,7 @@ const Dashboard = ({setAuth}) => {
 
 /////////////////////////////DELETEING FUNCTIONS////////////////////////
 
-  const deleteTweet = async (event) => {
+  const deleteTweet = async (event, username) => {
     const tweet_id = event.target.id
     try{
       const response = await fetch(`/tweet/delete/${tweet_id}`, {
@@ -277,14 +293,17 @@ const Dashboard = ({setAuth}) => {
         })
     }catch(err){
       console.error(err.message);
-
     }
-    getAllTweets();
+    if(profile === "all"){
+      getAllTweets();
+    }else{
+      getUserTweets(event, username, profile)
+    }
   }
 
-  const checkDelete = (user_id, tweet_id) => {
+  const checkDelete = (user_id, tweet_id, username) => {
     if(user_id === id){
-      return(<button id={tweet_id} className="button is-danger" onClick={event => deleteTweet(event)}>DELETE</button>)
+      return(<button id={tweet_id} className="button is-danger" onClick={event => deleteTweet(event, username)}>DELETE</button>)
     }
   }
 
@@ -315,9 +334,11 @@ const Dashboard = ({setAuth}) => {
   useEffect(() => {
     getFaves();
     getAllTweets();
-    getUsers();
   },[id, following])
 
+  useEffect( () => {
+    getUsers();
+  })
 
 
   return(
@@ -326,14 +347,14 @@ const Dashboard = ({setAuth}) => {
         <nav className="navbar pt-2 pb-2 is-fixed-top is-link">
           <div className="navbar-start">
             <div className="navbar-brand">
-              <a className="navbar-item" href="/"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
+              <a className="navbar-item" href="/home"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
             </div>
             <div className="navbar-menu">
               <a className="navbar-item" onClick={openUserModal}>User List</a>
             </div>
           </div>
           <div className="navbar-end">
-            <div className="ml-4 navbar-item">Hello @{name}!</div>
+            <a className="ml-4 navbar-item" onClick={event=>getUserTweets(event, name, id)}>Hello @{name}!</a>
             <div className="buttons">
               <a className="ml-5 button is-primary" onClick={openTweetModal}>Add A Tweet+</a>
               <a className="mr-2 button is-danger " onClick={event => logout(event)}>Log Out</a>
@@ -366,8 +387,8 @@ const Dashboard = ({setAuth}) => {
             <section className="modal-card-body">
               {users.map(user =>
                 user.user_id === id ? null : (
-                <div className="user" id={user.user_id}>
-                  <p className="username">@{user.username}</p>
+                <div className="user">
+                  <a onClick={event=>getUserTweets(event, user.username, user.user_id)} className="username">@{user.username}</a>
                   {checkFollow(user.user_id, user.username)}
                 </div>
               ))}
@@ -384,15 +405,15 @@ const Dashboard = ({setAuth}) => {
       <div className="tweets-container mt-4">
       {allTweets.map(tweet => (
         <div className="tweet">
-          <h1>@{tweet.username}</h1>
+        <h1><a onClick={event=>getUserTweets(event, tweet.username, tweet.author)}>@{tweet.username}</a></h1>
           <p>{tweet.tweet}</p>
           <div className="tweet-footer">
             <div className="fav-container">
               <div className="faves-num">{tweet.favorites_num}</div>
-              {checkFav(tweet.tweet_id)}
+              {checkFav(tweet.tweet_id, tweet.username)}
             </div>
             <div>
-              {checkDelete(tweet.author, tweet.tweet_id)}
+              {checkDelete(tweet.author, tweet.tweet_id, tweet.username)}
             </div>
           </div>
         </div>

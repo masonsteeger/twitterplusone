@@ -3,8 +3,11 @@
 } */
 
 body{
-  background-color: lightblue;
-  height: 100%;
+  background-image: url(./icons/bg.png);
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
 
 }
 textarea{
@@ -31,7 +34,7 @@ textarea{
 }
 .user:hover{
   background-color: rgba(174,216,230,0.5);
-  
+
 }
 .username{
   font-size: 30px;

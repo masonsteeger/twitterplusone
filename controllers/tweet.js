@@ -28,16 +28,6 @@ tweet.get("/read/:id", async (req, res) => {
   }
 })
 
-// //READ ALL OF ONE USER'S TWEETS
-// tweet.get("/user/:id", async (req, res) => {
-//   try{
-//     const {id} = req.params
-//     let userTweets = await pool.query(`SELECT user_id, username, tweets, favorites_num, created_at, tweet_id  FROM users JOIN tweets ON author=user_id WHERE user_id = '${id}';`)
-//     res.json(userTweets.rows);
-//   }catch(err){
-//     console.error(err.message);
-//   }
-// })
 
 //READ ALL USERS
 tweet.get("/users", async (req, res) => {
@@ -45,6 +35,17 @@ tweet.get("/users", async (req, res) => {
   res.json(allUsers.rows)
 })
 
+//READ ALL OF ONE USER'S TWEETS
+tweet.get("/user/:id", async (req, res) => {
+  try{
+    const {id} = req.params
+    let userTweets = await pool.query(`SELECT user_id, author, username, favorites_num, created_at, tweet_id, tweet  FROM users JOIN tweets ON author=user_id WHERE user_id = '${id}' ORDER BY created_at DESC;`)
+    console.log(userTweets);
+    res.json(userTweets.rows);
+  }catch(err){
+    console.log(err.message);
+  }
+})
 
 //READ USER FAVES
 tweet.get("/faves/:user_id", async (req,res) => {
@@ -69,6 +70,7 @@ tweet.put("/follow", async (req, res) => {
     console.error(err.message);
     res.status(500).json("Server Error")
   }
+
 })
 
 
