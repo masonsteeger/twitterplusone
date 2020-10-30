@@ -102,6 +102,7 @@ const Dashboard = ({setAuth}) => {
     let tweetModal = document.getElementById('tweet');
     tweetModal.classList.add("is-active");
     document.getElementById('tweet-box').focus();
+    dropMenu();
 
   }
 
@@ -116,6 +117,7 @@ const Dashboard = ({setAuth}) => {
   const openUserModal = () => {
     let userModal = document.getElementById('users-list');
     userModal.classList.add("is-active");
+    dropMenu();
   }
 
   const closeUserModal = () => {
@@ -123,16 +125,26 @@ const Dashboard = ({setAuth}) => {
     userModal.classList.remove("is-active");
   }
 
-  const pressEnter = (event) => {
-    if(event.key === 'Enter'){
-      submitTweet(event);
+  const dropMenu = (event) => {
+    const isActive = document.getElementById('burger').classList;
+    const menu = document.getElementById('menu').classList;
+    if(isActive.length === 2){
+      isActive.add('is-active')
+      menu.add('is-active')
+    }else if(isActive.length === 3){
+      isActive.remove('is-active')
+      menu.remove('is-active')
     }
   }
 
 
 /////////////////////////////SUBMITTING TWEET////////////////////////
 
-
+  const pressEnter = (event) => {
+    if(event.key === 'Enter'){
+      submitTweet(event);
+    }
+  }
 
   const countChar = (event) => {
     if(event.keyCode == 8){
@@ -372,14 +384,21 @@ const Dashboard = ({setAuth}) => {
           <div className="navbar-start">
             <div className="navbar-brand">
               <a className="navbar-item" href="/home"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
+              <a role="button" id='burger' class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={event => dropMenu(event)}>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              </a>
             </div>
           </div>
-          <div className="navbar-end">
-            <a className="navbar-item" onClick={event=>getUserTweets(event, name, id)}>Hello @{name}!</a>
-            <a className="navbar-item" onClick={openUserModal}>Following</a>
-            <div className="buttons">
-              <a className=" ml-2 button is-primary" onClick={openTweetModal}>Add A Tweet+</a>
-              <a className="mr-2 button is-danger " onClick={event => logout(event)}>Log Out</a>
+          <div id="menu" className="navbar-menu">
+            <div className="navbar-end">
+              <a className="navbar-item" onClick={event=>getUserTweets(event, name, id)}>Hello @{name}!</a>
+              <a className="navbar-item" onClick={openUserModal}>Following</a>
+              <div className="buttons">
+                <a className=" ml-2 button is-primary" onClick={openTweetModal}>Add A Tweet+</a>
+                <a className="mr-2 button is-danger " onClick={event => logout(event)}>Log Out</a>
+              </div>
             </div>
           </div>
         </nav>
