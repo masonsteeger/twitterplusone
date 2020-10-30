@@ -153,7 +153,7 @@ const Dashboard = ({setAuth}) => {
       }else{
         setCount(count+1)
       }
-    }else if(event.keyCode !== 9 && event.keyCode !== 13 && event.keyCode !== 16 && event.keyCode !== 17 && event.keyCode !== 18 && event.keyCode !== 20 && event.keyCode !== 27 && event.keyCode !== 32 && event.keyCode !== 33 && event.keyCode !== 34 && event.keyCode !== 35 && event.keyCode !== 36 && event.keyCode !== 37 && event.keyCode !== 38 && event.keyCode !== 39 && event.keyCode !== 40 && event.keyCode !== 46){
+    }else if(event.keyCode !== 9 && event.keyCode !== 13 && event.keyCode !== 16 && event.keyCode !== 17 && event.keyCode !== 18 && event.keyCode !== 20 && event.keyCode !== 27 && event.keyCode !== 33 && event.keyCode !== 34 && event.keyCode !== 35 && event.keyCode !== 36 && event.keyCode !== 37 && event.keyCode !== 38 && event.keyCode !== 39 && event.keyCode !== 40 && event.keyCode !== 46){
       if(count === 0){
         return
       }else{
