@@ -368,7 +368,7 @@ const Dashboard = ({setAuth}) => {
   useEffect(() => {
     getFaves();
     getAllTweets();
-  },[id])
+  },[id, following])
 
   useEffect( () => {
     getUsers();
