@@ -65,15 +65,33 @@ const Register = ({setAuth}) => {
   return(
     <Fragment>
 
-      <form className="container" onSubmit={onSubmitForm}>
-        <h1 className="title is-1 has-text-centered">Register</h1>
-        <input className="input is-medium" type="email" name="email" placeholder="email" value={email} onChange={event => onChange(event)}/><br/><br/>
-        <input className="input is-medium" type="text" name="username" placeholder="username" value={username} onChange={event => onChange(event)}/><br/><br/>
-        <input className="input is-medium" type="password" name="password" placeholder="password" value={password} onChange={event => onChange(event)}/><br/><br/>
-        <input className="button is-success is-large is-fullwidth" type= "submit" value="Submit" /><br/><br/>
-        <Link to="/login"><div className="button is-info columns is-mobile is-half is-centered">Login</div></Link>
-      </form><br/><br/>
+    <h1 className="title is-1 has-text-centered">Register</h1>
 
+      <form className="ml-6 mr-6 container" onSubmit={onSubmitForm}>
+        <div className="field">
+          <div className="control">
+            <input className="input is-large" type="email" name="email" placeholder="email" value={email} onChange={event => onChange(event)}/>
+          </div>
+        </div>
+        <div className="field">
+          <div className="control">
+            <input className="input is-large" type="text" name="username" placeholder="username" value={username} onChange={event => onChange(event)}/>
+          </div>
+        </div>
+        <div className="field">
+          <div className="control">
+            <input className="input is-large" type="password" name="password" placeholder="password" value={password} onChange={event => onChange(event)}/>
+          </div>
+        </div>
+        <div className="field">
+          <div className="mb-3 control">
+            <input className="button is-success is-large is-fullwidth" type= "submit" value="Submit" />
+          </div>
+          <div className="control">
+            <Link to="/login"><div className="button is-info is-large is-fullwidth">Back to Login</div></Link>
+          </div>
+        </div>
+      </form>
     </Fragment>
   )
 }
