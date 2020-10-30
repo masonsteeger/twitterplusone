@@ -40,7 +40,6 @@ const Dashboard = ({setAuth}) => {
 
   const getAllTweets = async() => {
     setProfile("all")
-    console.log(profile);
     try{
     const response = await fetch(`/tweet/read/${id}`)
     const parseRes = await response.json()
@@ -89,7 +88,6 @@ const Dashboard = ({setAuth}) => {
       })
       const parseRes = await response.json();
       setFaves(parseRes[0].favorites);
-
     }catch (err){
       console.error(err.message);
     }
@@ -370,7 +368,7 @@ const Dashboard = ({setAuth}) => {
   useEffect(() => {
     getFaves();
     getAllTweets();
-  },[id, following])
+  },[id])
 
   useEffect( () => {
     getUsers();
