@@ -53,7 +53,6 @@ textarea{
   width: 600px;
   padding:1em;
   margin: 1.5em;
-
 }
 
 .tweet>h1{
@@ -61,6 +60,7 @@ textarea{
 }
 .tweet>p{
   font-size: 26px;
+  word-wrap: break-word;
 }
 
 .tweet-footer{
@@ -103,4 +103,9 @@ textarea{
   height: 40px;
   width: 40px;
   margin-left: 1em;
+}
+
+#char-count{
+  font-size: 32px;
+  margin-left: 70%;
 }

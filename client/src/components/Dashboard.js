@@ -20,6 +20,7 @@ const Dashboard = ({setAuth}) => {
     setInputs({...inputs, [event.target.name]:event.target.value})
   }
   const [profile, setProfile] = useState("")
+  const [count, setCount] =  useState(parseInt(281))
 
 //////////////////////////////USEEFFECT FUNCTIONS////////////////////////
   async function getName() {
@@ -100,12 +101,16 @@ const Dashboard = ({setAuth}) => {
   const openTweetModal = () => {
     let tweetModal = document.getElementById('tweet');
     tweetModal.classList.add("is-active");
+    document.getElementById('tweet-box').focus();
+
   }
 
   const closeTweetModal = () => {
     let tweetModal = document.getElementById('tweet');
     tweetModal.classList.remove("is-active");
     setInputs({...inputs, tweet:''})
+    setCount(281)
+
   }
 
   const openUserModal = () => {
@@ -126,6 +131,25 @@ const Dashboard = ({setAuth}) => {
 
 
 /////////////////////////////SUBMITTING TWEET////////////////////////
+
+
+
+  const countChar = (event) => {
+    if(event.keyCode == 8){
+      if(count === 281){
+        return
+      }else{
+        setCount(count+1)
+      }
+    }else if(event.keyCode !== 9 && event.keyCode !== 13 && event.keyCode !== 16 && event.keyCode !== 17 && event.keyCode !== 18 && event.keyCode !== 20 && event.keyCode !== 27 && event.keyCode !== 32 && event.keyCode !== 33 && event.keyCode !== 34 && event.keyCode !== 35 && event.keyCode !== 36 && event.keyCode !== 37 && event.keyCode !== 38 && event.keyCode !== 39 && event.keyCode !== 40 && event.keyCode !== 46){
+      if(count === 0){
+        return
+      }else{
+      setCount(count-1)
+    }
+  }
+
+  }
 
   const submitTweet = async (event) => {
     event.preventDefault();
@@ -349,14 +373,12 @@ const Dashboard = ({setAuth}) => {
             <div className="navbar-brand">
               <a className="navbar-item" href="/home"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
             </div>
-            <div className="navbar-menu">
-              <a className="navbar-item" onClick={openUserModal}>User List</a>
-            </div>
           </div>
           <div className="navbar-end">
-            <a className="ml-4 navbar-item" onClick={event=>getUserTweets(event, name, id)}>Hello @{name}!</a>
+            <a className="navbar-item" onClick={event=>getUserTweets(event, name, id)}>Hello @{name}!</a>
+            <a className="navbar-item" onClick={openUserModal}>Following</a>
             <div className="buttons">
-              <a className="ml-5 button is-primary" onClick={openTweetModal}>Add A Tweet+</a>
+              <a className=" ml-2 button is-primary" onClick={openTweetModal}>Add A Tweet+</a>
               <a className="mr-2 button is-danger " onClick={event => logout(event)}>Log Out</a>
             </div>
           </div>
@@ -369,12 +391,13 @@ const Dashboard = ({setAuth}) => {
             </header>
             <section className="modal-card-body">
             <form id="send-tweet" onSubmit={submitTweet}>
-              <textarea id="tweet-box" name="tweet" value={tweet} cols="48" rows="6" form="send-tweet" maxLength="281" onKeyPress={event => pressEnter(event)} onChange={event => onChange(event)}/>
+              <textarea id="tweet-box" name="tweet" value={tweet} cols="48" rows="6" form="send-tweet" maxLength="281" onKeyPress={event => pressEnter(event)} onKeyDown={event => countChar(event)} onChange={event => onChange(event)}/>
               <input type="submit" value="Submit" className="button is-info mr-4" />
             </form>
             </section>
             <footer className="modal-card-foot">
               <button className="button is-danger" onClick={closeTweetModal}>Cancel</button>
+              <h3 id='char-count'>{count}</h3>
             </footer>
           </div>
         </div>
@@ -382,7 +405,7 @@ const Dashboard = ({setAuth}) => {
           <div className="modal-background"></div>
           <div className="modal-card">
             <header className="modal-card-head">
-              <p className="modal-card-title">All Users</p>
+              <p className="modal-card-title">Following</p>
             </header>
             <section className="modal-card-body">
               {users.map(user =>
@@ -406,12 +429,12 @@ const Dashboard = ({setAuth}) => {
       {allTweets.map(tweet => (
         <div className="tweet">
         <h1><a onClick={event=>getUserTweets(event, tweet.username, tweet.author)}>@{tweet.username}</a></h1>
-          <p>{tweet.tweet}</p>
-          <div className="tweet-footer">
-            <div className="fav-container">
-              <div className="faves-num">{tweet.favorites_num}</div>
-              {checkFav(tweet.tweet_id, tweet.username)}
-            </div>
+        <p>{tweet.tweet}</p>
+        <div className="tweet-footer">
+          <div className="fav-container">
+            <div className="faves-num">{tweet.favorites_num}</div>
+            {checkFav(tweet.tweet_id, tweet.username)}
+          </div>
             <div>
               {checkDelete(tweet.author, tweet.tweet_id, tweet.username)}
             </div>
