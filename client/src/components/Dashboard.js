@@ -363,15 +363,12 @@ const Dashboard = ({setAuth}) => {
   useEffect(() => {
     getName();
     getFaves();
+    getUsers();
   }, [])
 
   useEffect(() => {
     getAllTweets();
   },[id, following])
-
-  useEffect( () => {
-    getUsers();
-  })
 
 
   return(
