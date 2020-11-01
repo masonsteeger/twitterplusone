@@ -1,5 +1,4 @@
 import React, {Fragment, useState, useEffect} from 'react';
-import {Link} from "react-router-dom"
 import 'bulma/css/bulma.css'
 import '../App.css'
 import {toast} from "react-toastify"
@@ -363,10 +362,10 @@ const Dashboard = ({setAuth}) => {
 
   useEffect(() => {
     getName();
+    getFaves();
   }, [])
 
   useEffect(() => {
-    getFaves();
     getAllTweets();
   },[id, following])
 
