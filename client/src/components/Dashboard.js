@@ -144,7 +144,7 @@ const Dashboard = ({setAuth}) => {
   }
 
   const countChar = (event) => {
-    if(event.keyCode == 8){
+    if(event.keyCode === 8){
       if(count === 281){
         return
       }else{
@@ -193,17 +193,13 @@ const Dashboard = ({setAuth}) => {
   const favToggle = async(event, username) => {
     const tweet_id = event.target.id
     const user_id = id
-    const body = {tweet_id, user_id}
-    switch (event.target.classList[1]) {
-      case ('unfavorite'):
+    if (event.target.classList[1] === 'unfavorite') {
         event.target.classList.remove('unfavorite');
         event.target.classList.add('favorite');
-      break;
-      case ('favorite'):
+      }else{
         event.target.classList.remove('favorite');
         event.target.classList.add('unfavorite');
-      break;
-    }
+      }
     try{
       const body = {tweet_id, user_id}
       const response = await fetch("/tweet/favorite", {
@@ -245,8 +241,7 @@ const Dashboard = ({setAuth}) => {
     const currentUser = id;
     const username = button.value
     const user_id = button.id
-    switch(button.classList[1]){
-      case("is-info") :
+    if(button.classList[1] === 'is-info'){
         button.classList.remove('is-info')
         button.classList.add('is-danger')
         button.innerHTML="Unfollow"
@@ -259,8 +254,7 @@ const Dashboard = ({setAuth}) => {
           draggable: true,
           progress: undefined,
           })
-      break;
-      case("is-danger"):
+      }else{
       button.classList.add('is-info')
       button.classList.remove('is-danger')
       button.innerHTML="Follow"
@@ -362,11 +356,11 @@ const Dashboard = ({setAuth}) => {
 
   useEffect(() => {
     getName();
-    getFaves();
     getUsers();
   }, [])
 
   useEffect(() => {
+    getFaves();
     getAllTweets();
   },[id, following])
 
@@ -377,7 +371,7 @@ const Dashboard = ({setAuth}) => {
         <nav className="navbar pt-2 pb-2 is-fixed-top is-link">
           <div className="navbar-start">
             <div className="navbar-brand">
-              <a className="navbar-item" href="/home"><img src="./icons/logo.png" width="32" height="32" />Twitter+1</a>
+              <a className="navbar-item" href="/home"><img src="./icons/logo.png" width="32" height="32" alt="Twitter+1" />Twitter+1</a>
               <a role="button" id='burger' class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" onClick={event => dropMenu(event)}>
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
